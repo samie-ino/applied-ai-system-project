@@ -1,9 +1,10 @@
-from openai import OpenAI
+import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 def verify(problem, diagnosis):
     prompt = f"""
@@ -22,12 +23,9 @@ Return:
 - Confidence: X%
 """
 
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=[{"role": "user", "content": prompt}]
-    )
+    response = model.generate_content(prompt)
 
-    result = response.choices[0].message.content
+    result = response.text
 
     confidence = "Unknown"
     for line in result.split("\n"):

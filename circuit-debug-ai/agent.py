@@ -1,10 +1,11 @@
-from openai import OpenAI
+import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 from retriever import retrieve_context
 
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 def diagnose(problem):
     context = retrieve_context(problem)
@@ -26,9 +27,6 @@ Problem:
 {problem}
 """
 
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=[{"role": "user", "content": prompt}]
-    )
+    response = model.generate_content(prompt)
 
-    return response.choices[0].message.content
+    return response.text
