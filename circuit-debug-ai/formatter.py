@@ -8,11 +8,11 @@ def format_output(user_input, diagnosis, evaluation, confidence):
 {user_input}
 
 ──────────────────────────────────
-⚠️ Diagnosis:
+🧠 AI Reasoning + Diagnosis:
 {diagnosis}
 
 ──────────────────────────────────
-🧠 Verification:
+🧪 Verification:
 {evaluation}
 
 ──────────────────────────────────

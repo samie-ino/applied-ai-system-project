@@ -1,25 +1,29 @@
 from agent import diagnose
+from evaluator import verify
 
 test_cases = [
-    "op-amp output stuck high",
-    "no current in circuit",
-    "noisy signal on oscilloscope"
+    {"input": "op-amp output stuck high", "expected": "saturation"},
+    {"input": "no current in circuit", "expected": "open"},
+    {"input": "noisy signal", "expected": "noise"}
 ]
 
 def run_tests():
+    results = []
     passed = 0
 
-    for test in test_cases:
-        print(f"\nTesting: {test}")
-        result = diagnose(test)
+    for case in test_cases:
+        diagnosis = diagnose(case["input"])
+        evaluation, confidence = verify(case["input"], diagnosis)
 
-        if result and len(result) > 20:
-            print("✅ Passed")
+        success = case["expected"] in diagnosis.lower()
+
+        if success:
             passed += 1
-        else:
-            print("❌ Failed")
 
-    print(f"\n{passed}/{len(test_cases)} tests passed")
+        results.append({
+            "input": case["input"],
+            "passed": success,
+            "confidence": confidence
+        })
 
-if __name__ == "__main__":
-    run_tests()
+    return results, passed, len(test_cases)

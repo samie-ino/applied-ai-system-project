@@ -19,6 +19,14 @@ The system uses an **agentic workflow with a verification layer**:
 - **Final Output** → Displays a structured debug report with confidence score  
 - **Human-in-the-loop** → User reviews results and provides feedback  
 
+## 🚀 Advanced Features
+
+- Implemented a Retrieval-Augmented Generation (RAG) system using a custom knowledge base
+- Added agentic reasoning with step-by-step analysis
+- Specialized the AI for electrical engineering problem-solving
+- Built a test harness to evaluate system accuracy and confidence
+
+
 ## ⚙️ Setup Instructions
 
 ### 1. Clone the repository

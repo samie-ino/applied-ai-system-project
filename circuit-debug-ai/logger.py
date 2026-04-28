@@ -1,21 +1,9 @@
-from agent import diagnose
-from evaluator import verify
-from formatter import format_output
-from logger import log_interaction
+from datetime import datetime
 
-def main():
-    print("⚡ Circuit Debugging AI Assistant\n")
-
-    user_input = input("Describe your circuit issue: ")
-
-    diagnosis = diagnose(user_input)
-    evaluation, confidence = verify(user_input, diagnosis)
-
-    output = format_output(user_input, diagnosis, evaluation, confidence)
-
-    print(output)
-
-    log_interaction(user_input, diagnosis, evaluation, confidence)
-
-if __name__ == "__main__":
-    main()
+def log_interaction(user_input, diagnosis, evaluation, confidence):
+    with open("log.txt", "a") as f:
+        f.write(f"\n--- {datetime.now()} ---\n")
+        f.write(f"Input: {user_input}\n")
+        f.write(f"Diagnosis: {diagnosis}\n")
+        f.write(f"Evaluation: {evaluation}\n")
+        f.write(f"Confidence: {confidence}\n")

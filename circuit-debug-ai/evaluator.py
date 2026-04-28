@@ -7,7 +7,9 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def verify(problem, diagnosis):
     prompt = f"""
-You are verifying an AI-generated circuit diagnosis.
+You are an evaluator.
+
+Check if the diagnosis is correct and consistent.
 
 Problem:
 {problem}
@@ -15,13 +17,9 @@ Problem:
 Diagnosis:
 {diagnosis}
 
-Check:
-- Is it logically consistent?
-- Are there errors?
-
 Return:
-Verification summary
-Confidence score (0-100%)
+- Issues (if any)
+- Confidence: X%
 """
 
     response = client.chat.completions.create(
@@ -31,10 +29,9 @@ Confidence score (0-100%)
 
     result = response.choices[0].message.content
 
-    # simple confidence extraction
     confidence = "Unknown"
     for line in result.split("\n"):
-        if "%" in line:
+        if "Confidence" in line:
             confidence = line.strip()
 
     return result, confidence
