@@ -14,7 +14,7 @@ st.set_page_config(page_title="Circuit Debug AI", layout="wide")
 st.title("⚡ Circuit Debugging AI Assistant")
 
 # Create tabs
-tab1, tab2 = st.tabs(["🔍 Diagnosis", "🧮 Resistor Calculator"])
+tab1, tab2 = st.tabs(["🔍 Diagnosis", "⚡ Voltage & Resistor Calculator"])
 
 # Sidebar
 st.sidebar.title("⚙️ Options")
@@ -126,6 +126,19 @@ with tab2:
             # Show connection advice
             advice = get_connection_advice(connection.lower(), num_resistors)
             st.info(f"💡 {advice}")
+            
+            # Calculate safe voltages based on power ratings
+            st.subheader("⚠️ Safe Voltage Limits")
+            
+            # Standard power ratings for resistors
+            power_ratings = [0.125, 0.25, 0.5, 1.0]  # 1/8W, 1/4W, 1/2W, 1W
+            
+            for power in power_ratings:
+                # P = V²/R → V = √(P*R)
+                max_voltage = (power * total) ** 0.5
+                st.warning(f"**{power}W resistor:** Max safe voltage = **{max_voltage:.2f}V** (dissipates {power}W at this voltage)")
+            
+            st.info("💡 **Recommendation:** Choose resistors with power rating suitable for your circuit's operating voltage. When in doubt, use a higher power rating (e.g., 1/2W instead of 1/4W).")
             
             # Visual representation
             st.subheader("Connection Diagram")
