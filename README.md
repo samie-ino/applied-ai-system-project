@@ -9,14 +9,13 @@ This project builds on my work from Modules 1–3, where I learned to debug AI-g
 This project demonstrates how AI can be used responsibly by combining **generation + verification**, rather than relying on a single response.
 
 ## 🧠 Architecture Overview
-The system uses an **agentic workflow with a verification layer**:
+The system uses a **streamlined AI agent workflow**:
 
 - **User Input** → User describes a circuit issue  
 - **AI Agent (Diagnosis Engine)** → Generates possible causes and troubleshooting steps  
 - **Output Formatter** → Structures results into readable sections  
-- **AI Evaluator (Verification Layer)** → Checks correctness and consistency  
 - **Logger** → Records inputs and outputs for reliability  
-- **Final Output** → Displays a structured debug report with confidence score  
+- **Final Output** → Displays a structured debug report  
 - **Human-in-the-loop** → User reviews results and provides feedback  
 
 ## 🚀 Advanced Features
@@ -24,7 +23,7 @@ The system uses an **agentic workflow with a verification layer**:
 - Implemented a Retrieval-Augmented Generation (RAG) system using a custom knowledge base
 - Added agentic reasoning with step-by-step analysis
 - Specialized the AI for electrical engineering problem-solving
-- Built a test harness to evaluate system accuracy and confidence
+- Fast diagnosis without unnecessary verification overhead
 
 
 ## ⚙️ Setup Instructions
@@ -34,14 +33,15 @@ The system uses an **agentic workflow with a verification layer**:
     cd circuit-debug-ai
 
 ### 2. Install dependencies
-    pip install openai python-dotenv
+    pip install google-generativeai python-dotenv streamlit
 
 ### 3. Set up environment variables
 Create a `.env` file:
-    OPENAI_API_KEY=your_api_key_here
+    GEMINI_API_KEY=your_api_key_here
 
-### 4. Run the program
-    python main.py
+### 4. Run the Streamlit app
+    cd circuit-debug-ai
+    streamlit run app.py
 
 ## 💬 Sample Interactions
 
@@ -61,7 +61,7 @@ Output:
 
     🧠 Verification:
     Diagnosis is consistent with common op-amp failure modes.
-
+    📊 Confidence: 88%
     📊 Confidence: 88%
 
 ### Example 2

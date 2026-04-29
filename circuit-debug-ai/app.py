@@ -1,13 +1,11 @@
 import streamlit as st
 from agent import diagnose
-from evaluator import verify
 from logger import log_interaction
-from tests import run_tests
 
 st.set_page_config(page_title="Circuit Debug AI", layout="centered")
 
 st.title("⚡ Circuit Debugging AI Assistant")
-st.write("Diagnose and troubleshoot circuit problems using AI with verification.")
+st.write("Diagnose and troubleshoot circuit problems using AI.")
 
 # Sidebar
 st.sidebar.title("⚙️ Options")
@@ -22,24 +20,12 @@ if st.button("Analyze Circuit"):
     else:
         with st.spinner("Analyzing..."):
             diagnosis = diagnose(user_input)
-            evaluation, confidence = verify(user_input, diagnosis)
-
-            log_interaction(user_input, diagnosis, evaluation, confidence)
+            log_interaction(user_input, diagnosis, "", "")
 
         st.success("Analysis Complete")
 
-        col1, col2 = st.columns(2)
-
-        with col1:
-            st.subheader("🔍 Diagnosis")
-            st.write(diagnosis)
-
-        with col2:
-            st.subheader("🧪 Verification")
-            st.write(evaluation)
-
-        st.subheader("📊 Confidence")
-        st.write(confidence)
+        st.subheader("🔍 Diagnosis")
+        st.write(diagnosis)
 
 # Show logs
 if show_logs:
