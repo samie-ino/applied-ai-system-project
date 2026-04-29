@@ -6,8 +6,7 @@ from retriever import retrieve_context
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Use a supported model
-model = genai.GenerativeModel("gemini-1.5-flash-latest")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 def diagnose(problem):
     context = retrieve_context(problem)
