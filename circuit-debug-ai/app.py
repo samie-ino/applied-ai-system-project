@@ -52,10 +52,10 @@ with tab2:
         col1, col2 = st.columns(2)
         
         with col1:
-            voltage = st.number_input("Supply Voltage (V):", min_value=1, max_value=48, value=5, step=0.5)
+            voltage = st.number_input("Supply Voltage (V):", min_value=1.0, max_value=48.0, value=5.0, step=0.5)
         
         with col2:
-            current_ma = st.number_input("Desired Current (mA):", min_value=1, max_value=100, value=10, step=1)
+            current_ma = st.number_input("Desired Current (mA):", min_value=1.0, max_value=100.0, value=10.0, step=1.0)
         
         if st.button("Find Suitable Resistors"):
             resistors = get_resistors_for_voltage(voltage, current_ma)
