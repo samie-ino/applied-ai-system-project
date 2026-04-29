@@ -6,7 +6,7 @@ from retriever import retrieve_context
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-# ✅ Use a supported model
+# Use a supported model
 model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
 def diagnose(problem):
@@ -16,9 +16,9 @@ def diagnose(problem):
 You are a specialized electrical engineering assistant.
 
 Follow these steps:
-1. Think step-by-step
-2. Use context if relevant
-3. Output:
+1. Think step-by-step about the problem
+2. Use the provided context if relevant
+3. Output clearly:
    - Possible causes
    - Suggested tests
 
@@ -29,6 +29,8 @@ Problem:
 {problem}
 """
 
-    response = model.generate_content(prompt)
-
-    return response.text
+    try:
+        response = model.generate_content(prompt)
+        return response.text
+    except Exception as e:
+        return f"Error generating diagnosis: {e}"

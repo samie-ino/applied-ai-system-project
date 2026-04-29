@@ -9,9 +9,7 @@ model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
 def verify(problem, diagnosis):
     prompt = f"""
-You are an evaluator.
-
-Check if the diagnosis is correct and consistent.
+You are an evaluator checking an AI-generated diagnosis.
 
 Problem:
 {problem}
@@ -19,18 +17,26 @@ Problem:
 Diagnosis:
 {diagnosis}
 
-Return:
-- Issues (if any)
-- Confidence: X%
+Do the following:
+1. Check if the reasoning is correct
+2. Identify any issues
+3. Give a confidence score
+
+Return format:
+Issues: ...
+Confidence: X%
 """
 
-    response = model.generate_content(prompt)
+    try:
+        response = model.generate_content(prompt)
+        result = response.text
 
-    result = response.text
+        confidence = "Unknown"
+        for line in result.split("\n"):
+            if "Confidence" in line:
+                confidence = line.strip()
 
-    confidence = "Unknown"
-    for line in result.split("\n"):
-        if "Confidence" in line:
-            confidence = line.strip()
+        return result, confidence
 
-    return result, confidence
+    except Exception as e:
+        return f"Error verifying: {e}", "Error"
