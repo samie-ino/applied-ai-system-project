@@ -1,31 +1,116 @@
 import streamlit as st
 from agent import diagnose
 from logger import log_interaction
+from calculator import (
+    get_resistors_for_voltage,
+    calculate_series_resistance,
+    calculate_parallel_resistance,
+    format_resistance,
+    get_connection_advice
+)
 
-st.set_page_config(page_title="Circuit Debug AI", layout="centered")
+st.set_page_config(page_title="Circuit Debug AI", layout="wide")
 
 st.title("⚡ Circuit Debugging AI Assistant")
-st.write("Diagnose and troubleshoot circuit problems using AI.")
+
+# Create tabs
+tab1, tab2 = st.tabs(["🔍 Diagnosis", "🧮 Resistor Calculator"])
 
 # Sidebar
 st.sidebar.title("⚙️ Options")
 show_logs = st.sidebar.checkbox("Show Logs")
 
-# Input
-user_input = st.text_area("Describe your circuit issue:", height=150)
+# TAB 1: DIAGNOSIS
+with tab1:
+    st.write("Diagnose and troubleshoot circuit problems using AI.")
+    
+    # Input
+    user_input = st.text_area("Describe your circuit issue:", height=150)
+    
+    if st.button("Analyze Circuit"):
+        if user_input.strip() == "":
+            st.warning("Please enter a circuit issue.")
+        else:
+            with st.spinner("Analyzing..."):
+                diagnosis = diagnose(user_input)
+                log_interaction(user_input, diagnosis, "", "")
+    
+            st.success("Analysis Complete")
+    
+            st.subheader("🔍 Diagnosis")
+            st.write(diagnosis)
 
-if st.button("Analyze Circuit"):
-    if user_input.strip() == "":
-        st.warning("Please enter a circuit issue.")
-    else:
-        with st.spinner("Analyzing..."):
-            diagnosis = diagnose(user_input)
-            log_interaction(user_input, diagnosis, "", "")
-
-        st.success("Analysis Complete")
-
-        st.subheader("🔍 Diagnosis")
-        st.write(diagnosis)
+# TAB 2: RESISTOR CALCULATOR
+with tab2:
+    st.write("Calculate resistor values and combinations for your circuit.")
+    
+    calc_mode = st.radio("Choose mode:", ["Voltage → Find Resistors", "Resistor Values → Calculate Total"])
+    
+    if calc_mode == "Voltage → Find Resistors":
+        st.subheader("🔌 Resistor Finder")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            voltage = st.number_input("Supply Voltage (V):", min_value=1, max_value=48, value=5, step=0.5)
+        
+        with col2:
+            current_ma = st.number_input("Desired Current (mA):", min_value=1, max_value=100, value=10, step=1)
+        
+        if st.button("Find Suitable Resistors"):
+            resistors = get_resistors_for_voltage(voltage, current_ma)
+            
+            if resistors:
+                st.success("✅ Recommended resistors:")
+                
+                for i, r in enumerate(resistors, 1):
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.write(f"**Option {i}:** {format_resistance(r['value'])}")
+                    with col2:
+                        st.write(f"Current: {r['current_ma']:.2f} mA")
+                    with col3:
+                        st.write(f"Error: {r['error']:.1f}%")
+            else:
+                st.error("❌ No suitable resistors found. Try a higher voltage.")
+    
+    else:  # Resistor Values → Calculate Total
+        st.subheader("🔢 Series/Parallel Calculator")
+        
+        # Get connection type
+        connection = st.radio("Connection Type:", ["Series", "Parallel"], horizontal=True)
+        
+        # Get number of resistors
+        num_resistors = st.number_input("Number of resistors:", min_value=1, max_value=10, value=2)
+        
+        # Input resistor values
+        resistor_values = []
+        cols = st.columns(min(3, num_resistors))
+        
+        for i in range(num_resistors):
+            with cols[i % 3]:
+                r_val = st.number_input(f"Resistor {i+1} (Ω):", min_value=1, value=330, step=1, key=f"r{i}")
+                resistor_values.append(r_val)
+        
+        if st.button("Calculate Total Resistance"):
+            if connection == "Series":
+                total = calculate_series_resistance(resistor_values)
+            else:
+                total = calculate_parallel_resistance(resistor_values)
+            
+            st.success(f"✅ Total Resistance: **{format_resistance(total)}**")
+            
+            # Show connection advice
+            advice = get_connection_advice(connection.lower(), num_resistors)
+            st.info(f"💡 {advice}")
+            
+            # Visual representation
+            st.subheader("Connection Diagram")
+            if connection == "Series":
+                diagram = " ─── ".join([f"[{format_resistance(r)}]" for r in resistor_values])
+            else:
+                diagram = " ‖ ".join([f"[{format_resistance(r)}]" for r in resistor_values])
+            st.code(diagram, language="text")
 
 # Show logs
 if show_logs:
