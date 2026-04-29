@@ -5,3 +5,10 @@ Input: My circuit wont turn in its a resistor connected to a led
 Diagnosis: Error generating diagnosis: 404 models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
 Evaluation: Error verifying: 404 models/gemini-1.5-flash-latest is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
 Confidence: Error
+
+--- 2026-04-29 00:05:33.742699 ---
+Input: I have a circuit that has a resistor connected to an led but the led isnt turning on 
+
+Diagnosis: Error generating diagnosis: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+Evaluation: Error verifying: 404 models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.
+Confidence: Error
