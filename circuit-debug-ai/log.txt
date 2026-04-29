@@ -177,3 +177,58 @@ If the LED were open (e.g., reversed or broken internally), no current would flo
 By performing these tests, you should be able to pinpoint whether the issue is with your wiring (an external short) or with the LED itself (an internal short).
 Evaluation: 
 Confidence: 
+
+--- 2026-04-29 00:26:23.359546 ---
+Input: I have a simple LED circuit with a 5V power supply, a 330 ohm resistor, and a red LED. The LED is not lighting up at all. I've verified that the power supply is working correctly and I get 5V at the supply terminals. When I measure the voltage across the resistor, I get 5V. When I measure the voltage across the LED, I get 0V. The connections look correct visually.
+Diagnosis: Okay, let's break this down step-by-step using your measurements.
+
+You have a 5V supply, a 330 Ohm resistor, and a red LED in series.
+Your measurements are:
+*   Supply voltage: 5V (verified)
+*   Voltage across resistor: 5V
+*   Voltage across LED: 0V
+*   LED is not lighting up.
+
+**Step-by-step analysis:**
+
+1.  **Voltage across Resistor (V_R = 5V):** If the voltage drop across the 330 Ohm resistor is 5V, this implies that the current (I) flowing through the resistor is I = V/R = 5V / 330 Ohms = approximately 15.15 mA.
+2.  **Implication of Current:** In a series circuit, the current is the same through all components. Therefore, if 15.15 mA is flowing through the resistor, 15.15 mA *must* also be flowing towards the LED.
+3.  **Voltage across LED (V_LED = 0V):** If 15.15 mA is flowing towards the LED, but the voltage across the LED is 0V, this means the current is *bypassing* the LED, or the LED itself is internally short-circuited.
+4.  **Consistency Check:** This scenario (V_R = 5V and V_LED = 0V) is perfectly consistent with a short circuit occurring *across* the LED's terminals. The resistor drops the entire 5V because it's effectively connected directly across the 5V supply through the short. The LED doesn't light up because current is flowing around it, not through its light-emitting junction.
+
+---
+
+### Possible Causes
+
+Based on the analysis, the most likely cause for your specific measurements (V_R=5V, V_LED=0V) is:
+
+1.  **Short Circuit Across the LED:**
+    *   **Stray Wire/Solder Bridge:** A small strand of wire, a blob of solder, or even a component lead accidentally touching both terminals of the LED (or the points where it connects to the circuit). This creates a low-resistance path, diverting all current around the LED.
+    *   **Faulty LED (Internal Short):** While less common than an open circuit, an LED can fail by developing an internal short circuit, effectively becoming a very low-resistance path.
+    *   **Incorrect Breadboard Placement:** If using a breadboard, the LED might be plugged in a way that its terminals are connected to the same bus line, or bridged by something on the breadboard itself.
+
+### Suggested Tests
+
+To confirm the cause and resolve the issue:
+
+1.  **Visual Inspection for Shorts:**
+    *   Carefully examine the LED and its immediate connections. Look for any unintended contact between its two leads, or between either lead and another part of the circuit that shouldn't be connected. Check for solder bridges if it's a soldered circuit, or stray wire strands.
+    *   If on a breadboard, ensure the LED leads are in different (non-connected) columns/rows.
+
+2.  **Test the LED Independently (Diode Test):**
+    *   Disconnect the LED from the circuit.
+    *   Use your multimeter's **diode test mode**. Place the red probe on the anode (longer lead, or flatter side for SMD) and the black probe on the cathode.
+    *   **Expected Result for a good LED:** The multimeter should display a voltage reading (typically 1.5V to 2.5V for a red LED) and the LED might glow faintly.
+    *   **Expected Result for a shorted LED:** The multimeter will show a reading very close to 0V (or continuity). If this happens, the LED is likely faulty and shorted internally.
+    *   **Note:** If the LED were reversed or open, the diode test would typically show "OL" (Open Loop) or no reading in one or both directions. Since your measurements point to a short, a 0V reading during the diode test would confirm it.
+
+3.  **Test for Continuity Across the LED Connection Points (without LED):**
+    *   Remove the LED from the circuit.
+    *   Set your multimeter to **continuity mode** (usually makes a beep if there's a low resistance connection).
+    *   Place the probes on the two points in your circuit where the LED would normally connect.
+    *   **Expected Result for a normal circuit:** No beep/open circuit (unless the resistor is directly connected to ground, which is not the case here).
+    *   **Expected Result if there's an external short:** The multimeter will beep, indicating a short circuit where the LED should be. This would point to an issue with your wiring or breadboard connection, rather than the LED itself.
+
+By performing these tests, you should be able to pinpoint whether the LED itself is faulty (shorted) or if there's an external short in your wiring or breadboard setup.
+Evaluation: 
+Confidence: 

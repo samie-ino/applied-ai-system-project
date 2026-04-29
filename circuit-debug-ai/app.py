@@ -71,6 +71,29 @@ with tab2:
                         st.write(f"Current: {r['current_ma']:.2f} mA")
                     with col3:
                         st.write(f"Error: {r['error']:.1f}%")
+                
+                # Add connection advice
+                st.subheader("💡 Connection Options")
+                
+                best_resistor = resistors[0]['value']
+                
+                st.write("**If you have these standard resistor values available:**")
+                
+                # Suggest series combinations
+                st.write("**Series (to INCREASE resistance):**")
+                for base in [100, 220, 330, 470]:
+                    count = round(best_resistor / base)
+                    if 2 <= count <= 10:
+                        total = count * base
+                        st.write(f"  • {count}× {format_resistance(base)} in series = {format_resistance(total)}")
+                
+                # Suggest parallel combinations
+                st.write("**Parallel (to DECREASE resistance):**")
+                for base in [1000, 2200, 3300, 4700]:
+                    count = round(base / best_resistor)
+                    if 2 <= count <= 10:
+                        total = base / count
+                        st.write(f"  • {count}× {format_resistance(base)} in parallel = {format_resistance(total)}")
             else:
                 st.error("❌ No suitable resistors found. Try a higher voltage.")
     
@@ -81,15 +104,15 @@ with tab2:
         connection = st.radio("Connection Type:", ["Series", "Parallel"], horizontal=True)
         
         # Get number of resistors
-        num_resistors = st.number_input("Number of resistors:", min_value=1, max_value=10, value=2)
+        num_resistors = st.slider("Number of resistors:", min_value=1, max_value=10, value=2)
         
         # Input resistor values
         resistor_values = []
-        cols = st.columns(min(3, num_resistors))
+        cols = st.columns(min(5, num_resistors))
         
         for i in range(num_resistors):
-            with cols[i % 3]:
-                r_val = st.number_input(f"Resistor {i+1} (Ω):", min_value=1, value=330, step=1, key=f"r{i}")
+            with cols[i % 5]:
+                r_val = st.number_input(f"R{i+1} (Ω):", min_value=1.0, value=330.0, step=1.0, key=f"r{i}")
                 resistor_values.append(r_val)
         
         if st.button("Calculate Total Resistance"):
