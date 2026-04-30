@@ -148,3 +148,6 @@ It reinforced skills in:
 - Implement Retrieval-Augmented Generation (RAG)  
 - Improve verification with rule-based checks  
 - Build a web interface for better user experience  
+
+## 🎬Demo Video 
+https://www.loom.com/share/ae14d75ef00248bdb825d41ba3ec6e9b
